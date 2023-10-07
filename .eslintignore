@@ -1,0 +1,4 @@
+node_modules
+build
+.eslint.config.js
+coverage
