@@ -1,16 +1,16 @@
 import Fastify from 'fastify'
+import { prisma } from '../database'
+import UserController from './controllers/UserController'
 const fastify = Fastify({
   logger: true,
 })
 
-// Declare a route
-fastify.get('/', async function handler(request, reply) {
-  return { hello: 'Samuel' }
-})
+fastify.get('/users', UserController.index)
 
-fastify.listen({ port: 3000 }, error => {
+fastify.listen({ port: 3000 }, async error => {
   if (error) {
     fastify.log.error(error)
+    await prisma.$disconnect()
     process.exit(1)
   }
 })
