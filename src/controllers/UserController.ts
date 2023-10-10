@@ -6,6 +6,11 @@ interface CreateUserRequestBody {
   email: string;
   password: string;
 }
+
+interface IdUser {
+  id: number
+}
+
 class UserController {
   static async index(request: FastifyRequest, reply: FastifyReply) {
     const users = await prisma.user.findMany({
@@ -38,6 +43,8 @@ class UserController {
 
     return newUser
   }
+
+  
 }
 
 export default UserController
