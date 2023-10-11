@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { prisma } from '../../database'
+import {hash} from 'bcryptjs'
 
 interface CreateUserRequestBody {
   name: string;
@@ -7,9 +8,7 @@ interface CreateUserRequestBody {
   password: string;
 }
 
-interface IdUser {
-  id: number
-}
+
 
 class UserController {
   static async index(request: FastifyRequest, reply: FastifyReply) {
@@ -27,17 +26,35 @@ class UserController {
 
     const {name, email, password} = request.body as CreateUserRequestBody
 
+    if(!email.includes('@')) {
+      return reply.status(400).send({error: "You're missing the '@'!"})
+    }
+
+    if(password.length < 6) {
+      return reply.status(400).send({error: 'Password too short!'})
+    }
+
+    if(name === null || name === undefined || name.trim() === '') {
+      return reply.status(400).send({error: 'Invalid name!'})
+    } else if (email === null || email === undefined || email.trim() === '') {
+      return reply.status(400).send({error: 'Invalid email!'})
+    } else if (password === null || password === undefined || password.trim() === '') {
+      return reply.status(400).send({error: 'Invalid password!'})
+    }
+
     const userExists = await prisma.user.findUnique({where: {email}})
 
     if(userExists) {
       return reply.status(400).send({error: "user already exists!"})
     }
 
+    const hashPassword = await hash(password,8 )
+
     const newUser = await prisma.user.create({
       data: {
         name,
         email,
-        password
+        password: hashPassword
       }
     })
 
