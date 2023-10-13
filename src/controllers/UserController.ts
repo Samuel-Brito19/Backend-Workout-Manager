@@ -28,24 +28,25 @@ class UserController {
   ) {
     const { name, email, password } = request.body
 
+    if (
+      !name ||
+      !email ||
+      !password ||
+      name.trim() === '' ||
+      email.trim() === '' ||
+      password.trim() === ''
+    ) {
+      return reply.status(400).send({
+        error: 'name, email and password are required!',
+      })
+    }
+
     if (!email.includes('@')) {
-      return reply.status(400).send({ error: "You're missing the '@'!" })
+      return reply.status(400).send({ error: 'Invalid e-mail!' })
     }
 
     if (password.length < 6) {
       return reply.status(400).send({ error: 'Password too short!' })
-    }
-
-    if (name === null || name === undefined || name.trim() === '') {
-      return reply.status(400).send({ error: 'Invalid name!' })
-    } else if (email === null || email === undefined || email.trim() === '') {
-      return reply.status(400).send({ error: 'Invalid email!' })
-    } else if (
-      password === null ||
-      password === undefined ||
-      password.trim() === ''
-    ) {
-      return reply.status(400).send({ error: 'Invalid password!' })
     }
 
     const userExists = await prisma.user.findUnique({ where: { email } })
@@ -64,7 +65,11 @@ class UserController {
       },
     })
 
-    return newUser
+    return reply.status(201).send({
+      id: newUser.id,
+      name: newUser.name,
+      email: newUser.email,
+    })
   }
 }
 
