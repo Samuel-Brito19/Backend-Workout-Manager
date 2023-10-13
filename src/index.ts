@@ -6,6 +6,7 @@ const fastify = Fastify({
 })
 
 fastify.get('/users', UserController.index)
+fastify.post('/users', UserController.store)
 
 fastify.listen({ port: 3000 }, async error => {
   if (error) {
