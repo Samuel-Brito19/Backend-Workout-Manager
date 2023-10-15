@@ -7,7 +7,7 @@ const fastify = Fastify({
 
 fastify.get('/users', UserController.index)
 fastify.post('/users', UserController.store)
-fastify.delete('/users', UserController.delete)
+fastify.delete('/users/:id', UserController.delete)
 
 fastify.listen({ port: 3000 }, async error => {
   if (error) {
