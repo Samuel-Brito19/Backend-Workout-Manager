@@ -8,6 +8,11 @@ interface CreateUserRequestBody {
   password: string
 }
 
+interface DeletedId {
+  id: number,
+  name: string
+}
+
 class UserController {
   static async index() {
     const users = await prisma.user.findMany({
@@ -70,6 +75,30 @@ class UserController {
       name: newUser.name,
       email: newUser.email,
     })
+  }
+
+  static async delete(request: FastifyRequest, reply: FastifyReply) {
+
+    const {id, name} = request.body as DeletedId
+
+    const noUser = await prisma.user.findUnique({where: {id}})
+
+    if(!noUser) {
+      reply.send({error: "user dont exist!"})
+    }
+
+    const deletedUserId = await prisma.user.delete({
+      where: {
+        id,
+        name
+      }
+    })
+
+    return reply.status(201).send({
+      id: deletedUserId.id,
+      name: deletedUserId.name
+    })
+
   }
 }
 
