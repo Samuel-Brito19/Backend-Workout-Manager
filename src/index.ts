@@ -1,6 +1,7 @@
 import Fastify from 'fastify'
 import { prisma } from '../database'
 import UserController from './controllers/UserController'
+
 const fastify = Fastify({
   logger: true,
 })
