@@ -1,10 +1,26 @@
+import { FastifyRequest, FastifyReply } from "fastify";
 import { prisma } from "../../database";
 
+interface ParamsId {
+    userId: number
+}
+
+interface BodyWorkout {
+    title: string,
+}
 class WorkoutController {
 
-    static async index() {
+    static async index(request: FastifyRequest<{Params: ParamsId}>, reply: FastifyReply) {
 
-        const workout = await prisma.workout.findMany({
+        const {userId} = request.params
+
+        const idAsNumber = Number(userId)
+
+        if(!idAsNumber) {
+            return reply.status(400).send({error: "User dont exist!"})
+        }
+
+        const workouts = await prisma.workout.findMany({
             select: {
                 id: true,
                 title: true,
@@ -12,7 +28,31 @@ class WorkoutController {
                 userId: true
             }
         })
-        return workout
+        
+        return workouts
+    }
+
+    static async store(request: FastifyRequest<{Params: ParamsId, Body: BodyWorkout}>, reply: FastifyReply) {
+
+        const {userId} = request.params
+
+        const idAsNumber = Number(userId)
+
+        if(!idAsNumber) {
+            return reply.status(400).send({error: "User dont exist!"})
+        }
+
+        const {title} = request.body
+
+        const newWorkout = await prisma.workout.create({
+            data: {
+                title,
+                userId: idAsNumber
+            }
+        })
+
+        return newWorkout
+        
     }
 }
 
