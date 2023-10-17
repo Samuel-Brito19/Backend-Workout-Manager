@@ -22,10 +22,8 @@ class WorkoutController {
         }
 
         const workouts = await prisma.workout.findMany({
-            select: {
-                id: true,
-                title: true,
-                userId: true
+            where: {
+                userId: idAsNumber
             }
         })
         

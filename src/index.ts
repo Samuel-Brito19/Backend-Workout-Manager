@@ -11,8 +11,8 @@ fastify.get('/users', UserController.index)
 fastify.post('/users', UserController.store)
 fastify.delete('/users/:id', UserController.delete)
 
-fastify.get('/users/workout/:userId', WorkoutController.index)
-fastify.post('/users/workout/:userId', WorkoutController.store)
+fastify.get('/users/:userId/workout', WorkoutController.index)
+fastify.post('/users/:userId/workout', WorkoutController.store)
 fastify.delete('/users/:userId/workout/:id', WorkoutController.delete)
 
 
