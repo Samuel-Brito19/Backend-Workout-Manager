@@ -57,6 +57,27 @@ class ExerciseController {
 
         return newExercise
     }
+
+    static async delete(request: FastifyRequest<{Params: ParamsExercise}>, reply: FastifyReply) {
+
+        const {id, workoutId} = request.params
+
+        const idNumber = Number(id)
+
+        if(!workoutId) {
+            return reply.status(400).send({erro: "Workout doesn't exist!"})
+        }
+
+        const deletedExercise = await prisma.exercise.delete({
+            where: {
+                id: idNumber
+            }
+        })
+
+        return reply.status(200).send({
+            id: deletedExercise.id
+        })
+    }
 }
 
 export default ExerciseController
