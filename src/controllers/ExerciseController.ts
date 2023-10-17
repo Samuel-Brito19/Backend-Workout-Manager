@@ -51,7 +51,7 @@ class ExerciseController {
                 name,
                 sets,
                 repetitions,
-                workoutId
+                workoutId: workoutIdNumber
             }
         })
 
