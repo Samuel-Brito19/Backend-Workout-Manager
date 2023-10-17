@@ -13,6 +13,7 @@ fastify.delete('/users/:id', UserController.delete)
 
 fastify.get('/users/workout/:userId', WorkoutController.index)
 fastify.post('/users/workout/:userId', WorkoutController.store)
+fastify.delete('/users/:userId/workout/:id', WorkoutController.delete)
 
 
 fastify.listen({ port: 3000 }, async error => {

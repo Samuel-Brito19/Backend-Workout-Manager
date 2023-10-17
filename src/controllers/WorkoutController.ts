@@ -2,7 +2,8 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { prisma } from "../../database";
 
 interface ParamsId {
-    userId: number
+    userId: number,
+    id: number
 }
 
 interface BodyWorkout {
@@ -24,7 +25,6 @@ class WorkoutController {
             select: {
                 id: true,
                 title: true,
-                user: true,
                 userId: true
             }
         })
@@ -53,6 +53,33 @@ class WorkoutController {
 
         return newWorkout
         
+    }
+
+    static async delete(request: FastifyRequest<{Params: ParamsId}>, reply: FastifyReply) {
+
+        const {id, userId} = request.params
+        
+        const idAsNumber = Number(id)
+
+        if(!userId) {
+            return reply.status(400).send({error: "no user found!"})
+        }
+
+        const noWorkout = await prisma.workout.findUnique({where: {id: idAsNumber}})
+
+        if(!noWorkout) {
+            return reply.status(400).send({error: "Workout doesn't exist!"})
+        }
+
+        const deleteWorkout = await prisma.workout.delete({
+            where: {
+                id: idAsNumber
+            }
+        })
+
+        return reply.status(200).send({
+            id: deleteWorkout.id
+        })
     }
 }
 
