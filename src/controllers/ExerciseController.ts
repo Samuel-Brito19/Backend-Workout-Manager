@@ -15,7 +15,7 @@ interface RequestExersice {
 
 class ExerciseController {
 
-    static async index(request: FastifyRequest<{Params: ParamsExercise, Body: RequestExersice}>, reply: FastifyReply) {
+    static async index(request: FastifyRequest<{Params: ParamsExercise}>, reply: FastifyReply) {
 
         const {workoutId} = request.params
 
@@ -32,6 +32,30 @@ class ExerciseController {
         })
 
         return exercises
+    }
+
+    static async store(request: FastifyRequest<{Params: ParamsExercise, Body: RequestExersice}>, reply: FastifyReply) {
+        
+        const {workoutId} = request.params
+
+        const workoutIdNumber = Number(workoutId)
+        
+        if(!workoutIdNumber) {
+            return reply.status(400).send({erro: "Workout doesn't exist!"})
+        }
+
+        const {name, sets, repetitions} = request.body
+
+        const newExercise = await prisma.exercise.create({
+            data: {
+                name,
+                sets,
+                repetitions,
+                workoutId
+            }
+        })
+
+        return newExercise
     }
 }
 
