@@ -22,7 +22,7 @@ class ExerciseController {
         const workoutIdNumber = Number(workoutId)
 
         if(!workoutIdNumber) {
-            return reply.status(400).send({erro: "Workout doesn't exist!"})
+            return reply.status(400).send({error: "Workout doesn't exist!"})
         }
 
         const exercises = await prisma.exercise.findMany({
@@ -41,7 +41,7 @@ class ExerciseController {
         const workoutIdNumber = Number(workoutId)
         
         if(!workoutIdNumber) {
-            return reply.status(400).send({erro: "Workout doesn't exist!"})
+            return reply.status(400).send({error: "Workout doesn't exist!"})
         }
 
         const {name, sets, repetitions} = request.body
@@ -65,7 +65,7 @@ class ExerciseController {
         const idNumber = Number(id)
 
         if(!workoutId) {
-            return reply.status(400).send({erro: "Workout doesn't exist!"})
+            return reply.status(400).send({error: "Workout doesn't exist!"})
         }
 
         const deletedExercise = await prisma.exercise.delete({
