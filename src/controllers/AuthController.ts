@@ -29,6 +29,6 @@ export class AuthController {
 
         const token = sign({id: user.id}, `${process.env.SECRET_JWT}`, {expiresIn: "1d"})
 
-        return reply.send({user,  token})
+        return reply.send({id: user.id, email: user.email,  token})
     }
 }

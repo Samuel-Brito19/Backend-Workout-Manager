@@ -21,7 +21,7 @@ fastify.get('/users/workouts/:workoutId/exercises', ExerciseController.index)
 fastify.post('/users/workouts/:workoutId/exercises', ExerciseController.store)
 fastify.delete('/users/workouts/:workoutId/exercises/:id', ExerciseController.delete)
 
-fastify.post('/auth', AuthController.autenticate )
+fastify.post('/auth', AuthController.autenticate)
 
 
 fastify.listen({ port: 3000 }, async error => {
