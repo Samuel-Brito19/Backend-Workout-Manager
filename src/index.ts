@@ -3,6 +3,7 @@ import { prisma } from '../database'
 import UserController from './controllers/UserController'
 import WorkoutController from './controllers/WorkoutController'
 import ExerciseController from './controllers/ExerciseController'
+import { AuthController } from './controllers/AuthController'
 
 const fastify = Fastify({
   logger: true,
@@ -19,6 +20,8 @@ fastify.delete('/users/:userId/workouts/:id', WorkoutController.delete)
 fastify.get('/users/workouts/:workoutId/exercises', ExerciseController.index)
 fastify.post('/users/workouts/:workoutId/exercises', ExerciseController.store)
 fastify.delete('/users/workouts/:workoutId/exercises/:id', ExerciseController.delete)
+
+fastify.post('/auth', AuthController.autenticate )
 
 
 fastify.listen({ port: 3000 }, async error => {
