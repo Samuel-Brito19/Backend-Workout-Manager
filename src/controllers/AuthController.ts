@@ -4,14 +4,14 @@ import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import 'dotenv/config'
 
-interface TypeBody {
+interface AuthenticationBody {
     email: string,
     password: string
 }
 
 export class AuthController {
 
-    static async autenticate(request: FastifyRequest<{Body:TypeBody}>, reply: FastifyReply) {
+    static async autenticate(request: FastifyRequest<{Body:AuthenticationBody}>, reply: FastifyReply) {
 
         const {email, password} = request.body
 
@@ -27,8 +27,11 @@ export class AuthController {
             return reply.status(400).send({erro: "Invalid password!"})
         }
 
-        const token = sign({id: user.id}, `${process.env.SECRET_JWT}`, {expiresIn: "1d"})
+        const token = sign({id: user.id}, `${process.env.SECRET_JWT}`, {expiresIn: "7d"})
 
-        return reply.send({id: user.id, email: user.email,  token})
+        return reply.send({user: {
+            id: user.id,
+            email: user.email
+        } ,token})
     }
 }
