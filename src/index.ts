@@ -4,6 +4,7 @@ import UserController from './controllers/UserController'
 import WorkoutController from './controllers/WorkoutController'
 import ExerciseController from './controllers/ExerciseController'
 import { AuthController } from './controllers/AuthController'
+import authenticateJWT from './middlewares/middlewareFunction'
 
 const fastify = Fastify({
   logger: true,
@@ -13,7 +14,7 @@ fastify.get('/users', UserController.index)
 fastify.post('/users', UserController.store)
 fastify.delete('/users/:id', UserController.delete)
 
-fastify.get('/users/:userId/workouts', WorkoutController.index)
+fastify.get('/users/:userId/workouts', {preHandler: [authenticateJWT]}, WorkoutController.index)
 fastify.post('/users/:userId/workouts', WorkoutController.store)
 fastify.delete('/users/:userId/workouts/:id', WorkoutController.delete)
 
