@@ -1,10 +1,10 @@
 import Fastify from 'fastify'
 import { prisma } from '../database'
 import UserController from './controllers/UserController'
+import { authenticateJWT } from './middlewares/auth'
 import WorkoutController from './controllers/WorkoutController'
 import ExerciseController from './controllers/ExerciseController'
 import { AuthController } from './controllers/AuthController'
-import { authenticateJWT } from './middlewares/auth'
 
 const fastify = Fastify({
   logger: true,
@@ -14,7 +14,6 @@ fastify.get('/users', UserController.index)
 fastify.post('/users', UserController.store)
 fastify.delete('/users/:id', UserController.delete)
 
-
 fastify.get('/users/:userId/workouts', WorkoutController.index)
 fastify.post('/users/:userId/workouts', {
   preHandler: authenticateJWT,
@@ -23,7 +22,10 @@ fastify.post('/users/:userId/workouts', {
 fastify.delete('/users/:userId/workouts/:id', WorkoutController.delete)
 
 fastify.get('/users/workouts/:workoutId/exercises', ExerciseController.index)
-fastify.post('/users/workouts/:workoutId/exercises', ExerciseController.store)
+fastify.post('/users/workouts/:workoutId/exercises', {
+    preHandler: authenticateJWT,
+    handler: ExerciseController.store
+})
 fastify.delete(
   '/users/workouts/:workoutId/exercises/:id',
   ExerciseController.delete,
