@@ -13,7 +13,7 @@ export const authenticateJWT = async (
     const token = request.headers.authorization
 
     if (!token) {
-      return reply.status(401).send({ message: 'Token JWT ausente' })
+      return reply.status(401).send({ message: 'JWT Token missing!' })
     }
 
     interface Decoded {
@@ -27,6 +27,6 @@ export const authenticateJWT = async (
     request.userId = decoded.userId
     done()
   } catch (error) {
-    reply.status(401).send({ message: 'Token JWT inválido' })
+    reply.status(401).send({ message: 'Invalid JWT token' })
   }
 }

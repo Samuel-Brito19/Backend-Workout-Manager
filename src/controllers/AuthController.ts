@@ -25,7 +25,7 @@ export class AuthController {
     const isValidPassword = await compare(password, user.password)
 
     if (!isValidPassword) {
-      return reply.status(400).send({ erro: 'Invalid password!' })
+      return reply.status(400).send({ error: 'Invalid password!' })
     }
 
     const token = sign({ userId: user.id }, `${process.env.SECRET_JWT}`, {
