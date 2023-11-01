@@ -1,4 +1,5 @@
 import Fastify from 'fastify'
+import cors from '@fastify/cors'
 import { prisma } from '../database'
 import UserController from './controllers/UserController'
 import { authenticateJWT } from './middlewares/auth'
@@ -8,6 +9,10 @@ import { AuthController } from './controllers/AuthController'
 
 const fastify = Fastify({
   logger: true,
+})
+
+fastify.register(cors, {
+  origin: '*',
 })
 
 fastify.get('/users', UserController.index)
@@ -23,8 +28,8 @@ fastify.delete('/users/:userId/workouts/:id', WorkoutController.delete)
 
 fastify.get('/users/workouts/:workoutId/exercises', ExerciseController.index)
 fastify.post('/users/workouts/:workoutId/exercises', {
-    preHandler: authenticateJWT,
-    handler: ExerciseController.store
+  preHandler: authenticateJWT,
+  handler: ExerciseController.store,
 })
 fastify.delete(
   '/users/workouts/:workoutId/exercises/:id',
