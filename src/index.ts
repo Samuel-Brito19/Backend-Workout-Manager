@@ -1,4 +1,4 @@
-import Fastify from 'fastify'
+import Fastify, { FastifyReply, FastifyRequest } from 'fastify'
 import cors from '@fastify/cors'
 import { prisma } from '../database'
 import UserController from './controllers/UserController'
@@ -6,28 +6,65 @@ import { authenticateJWT } from './middlewares/auth'
 import WorkoutController from './controllers/WorkoutController'
 import ExerciseController from './controllers/ExerciseController'
 import { AuthController } from './controllers/AuthController'
+import fjwt from '@fastify/jwt'
 
-const fastify = Fastify({
+export const fastify = Fastify({
   logger: true,
 })
 
+declare module 'fastify' {
+  export interface FastifyInstance {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Authentication: any
+  }
+}
+
+declare module '@fastify/jwt' {
+  interface FastifyJWT {
+    user: {
+      id: number,
+    }
+  }
+}
+
 fastify.register(cors, {
   origin: '*',
+})
+
+
+fastify.register(fjwt,
+  {
+  secret: 'dsdsdadsad'
+})
+
+fastify.decorate('Authentication',async (request: FastifyRequest, reply: FastifyReply) => {
+  try {
+    await request.jwtVerify()
+  } catch (error) {
+    reply.send(error)
+  }
 })
 
 fastify.get('/users', UserController.index)
 fastify.post('/users', UserController.store)
 fastify.delete('/users/:id', UserController.delete)
 
-fastify.get('/users/:userId/workouts', WorkoutController.index)
-fastify.post('/users/:userId/workouts', {
-  preHandler: authenticateJWT,
-  handler: WorkoutController.store,
-})
-fastify.delete('/users/:userId/workouts/:id', WorkoutController.delete)
+fastify.get('/users/workouts',
+{preHandler: [fastify.Authentication]},
+WorkoutController.index)
+fastify.post(
+  '/users/workouts', 
+  {preHandler: [fastify.Authentication]},
+  WorkoutController.store,
+  )
+fastify.delete('/users/workouts/:id',
+{preHandler: [fastify.Authentication]},
+WorkoutController.delete)
 
-fastify.get('/users/workouts/:workoutId/exercises', ExerciseController.index)
-fastify.post('/users/workouts/:workoutId/exercises', {
+
+fastify.get('/exercises', ExerciseController.index)
+fastify.get('/exercises/:id', ExerciseController.index)
+fastify.post('/exercises', {
   preHandler: authenticateJWT,
   handler: ExerciseController.store,
 })

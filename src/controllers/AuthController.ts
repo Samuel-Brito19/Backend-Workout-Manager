@@ -1,8 +1,9 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { prisma } from '../../database'
 import { compare } from 'bcryptjs'
-import { sign } from 'jsonwebtoken'
+//import { sign } from 'jsonwebtoken'
 import 'dotenv/config'
+import { fastify } from '..'
 
 interface AuthenticationBody {
   email: string
@@ -28,8 +29,10 @@ export class AuthController {
       return reply.status(400).send({ error: 'Invalid password!' })
     }
 
-    const token = sign({ userId: user.id }, `${process.env.SECRET_JWT}`, {
-      expiresIn: '7d',
+  
+
+    const token = fastify.jwt.sign({ id: user.id }, {
+      expiresIn: "7d"
     })
 
     return reply.send({
