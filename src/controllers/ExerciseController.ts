@@ -17,32 +17,22 @@ class ExerciseController {
 
     static async index(request: FastifyRequest<{Params: ParamsExercise}>, reply: FastifyReply) {
 
-        const {workoutId} = request.params
+       //const user = request.user
+       const workoutId = request.user.id
 
-        const workoutIdNumber = Number(workoutId)
-
-        if(!workoutIdNumber) {
-            return reply.status(400).send({error: "Workout doesn't exist!"})
-        }
 
         const exercises = await prisma.exercise.findMany({
             where: {
-                workoutId: workoutIdNumber
+                workoutId: workoutId
             }
         })
 
-        return exercises
+        return reply.status(200).send(exercises)
     }
 
-    static async store(request: FastifyRequest<{Params: ParamsExercise, Body: RequestExersice}>, reply: FastifyReply) {
+    static async store(request: FastifyRequest<{Body: RequestExersice}>, reply: FastifyReply) {
         
-        const {workoutId} = request.params
-
-        const workoutIdNumber = Number(workoutId)
-        
-        if(!workoutIdNumber) {
-            return reply.status(400).send({error: "Workout doesn't exist!"})
-        }
+        const workoutId = request.user.workoutId.id
 
         const {name, sets, repetitions} = request.body
 
@@ -51,11 +41,11 @@ class ExerciseController {
                 name,
                 sets,
                 repetitions,
-                workoutId: workoutIdNumber
+                workoutId: workoutId
             }
         })
 
-        return newExercise
+        return reply.status(200).send(newExercise)
     }
 
     static async delete(request: FastifyRequest<{Params: ParamsExercise}>, reply: FastifyReply) {

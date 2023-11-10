@@ -22,8 +22,13 @@ declare module '@fastify/jwt' {
   interface FastifyJWT {
     user: {
       id: number,
-    }
+      workoutId: {
+        id: number
+      }
+    },
+    
   }
+
 }
 
 fastify.register(cors, {
@@ -48,6 +53,7 @@ fastify.get('/users', UserController.index)
 fastify.post('/users', UserController.store)
 fastify.delete('/users/:id', UserController.delete)
 
+
 fastify.get('/users/workouts',
 {preHandler: [fastify.Authentication]},
 WorkoutController.index)
@@ -61,6 +67,7 @@ fastify.delete('/users/workouts/:id',
 WorkoutController.delete)
 
 
+
 fastify.get('/exercises', 
 {preHandler: [fastify.Authentication]},
 ExerciseController.index)
@@ -69,11 +76,11 @@ fastify.post('/exercises',
   {preHandler: [fastify.Authentication]},
   ExerciseController.store,
 )
-
 fastify.delete(
   '/users/workouts/exercises/:id',
   ExerciseController.delete,
 )
+
 
 fastify.post('/auth', AuthController.autenticate)
 
