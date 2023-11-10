@@ -10,6 +10,7 @@ interface RequestExersice {
     name: string,
     sets: number,
     repetitions: number,
+    workoutId: number
 }
 
 
@@ -18,7 +19,7 @@ class ExerciseController {
     static async index(request: FastifyRequest<{Params: ParamsExercise}>, reply: FastifyReply) {
 
        //const user = request.user
-       const workoutId = request.user.id
+       const {workoutId} = request.params
 
 
         const exercises = await prisma.exercise.findMany({
@@ -32,16 +33,16 @@ class ExerciseController {
 
     static async store(request: FastifyRequest<{Body: RequestExersice}>, reply: FastifyReply) {
         
-        const workoutId = request.user.workoutId.id
+        //const workoutId = request.user.workoutId.id
 
-        const {name, sets, repetitions} = request.body
+        const {name, sets, repetitions, workoutId} = request.body
 
         const newExercise = await prisma.exercise.create({
             data: {
                 name,
                 sets,
                 repetitions,
-                workoutId: workoutId
+                workoutId
             }
         })
 
