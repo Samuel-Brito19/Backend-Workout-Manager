@@ -20,11 +20,11 @@ class ExerciseController {
 
        //const user = request.user
        const {workoutId} = request.params
-
+        console.log(workoutId)
 
         const exercises = await prisma.exercise.findMany({
             where: {
-                workoutId: workoutId
+                workoutId: Number(workoutId)
             }
         })
 
@@ -51,13 +51,10 @@ class ExerciseController {
 
     static async delete(request: FastifyRequest<{Params: ParamsExercise}>, reply: FastifyReply) {
 
-        const {id, workoutId} = request.params
+        const {id} = request.params
 
         const idNumber = Number(id)
 
-        if(!workoutId) {
-            return reply.status(400).send({error: "Workout doesn't exist!"})
-        }
 
         const deletedExercise = await prisma.exercise.delete({
             where: {
