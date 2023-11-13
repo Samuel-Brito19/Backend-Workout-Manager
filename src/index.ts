@@ -79,6 +79,10 @@ fastify.post('/exercises',
   {preHandler: [fastify.Authentication]},
   ExerciseController.store,
 )
+fastify.put('/exercises/:id',
+{preHandler: [fastify.Authentication]},
+ExerciseController.update
+)
 fastify.delete(
   '/exercises/:id',
   {preHandler: [fastify.Authentication]},
