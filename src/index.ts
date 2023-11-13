@@ -58,7 +58,7 @@ fastify.get('/users/workouts',
 {preHandler: [fastify.Authentication]},
 WorkoutController.index)
 
-fastify.get('/users/workouts/:id',
+fastify.get('/workout/:id',
 {preHandler: [fastify.Authentication]},
 WorkoutController.find
 )
@@ -80,6 +80,10 @@ WorkoutController.delete)
 fastify.get('/exercises/:workoutId', 
 {preHandler: [fastify.Authentication]},
 ExerciseController.index)
+fastify.get('/exercise/:id',
+{preHandler: [fastify.Authentication]},
+ExerciseController.find
+)
 fastify.post('/exercises', 
   {preHandler: [fastify.Authentication]},
   ExerciseController.store,
