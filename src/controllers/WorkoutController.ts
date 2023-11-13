@@ -5,7 +5,8 @@ import { prisma } from "../../database";
 
 interface ParamsId {
     userId: number,
-    id: number
+    id: number,
+    workoutId: number
 }
 
 interface BodyWorkout {
@@ -45,6 +46,19 @@ class WorkoutController {
             newWorkout
         )
         
+    }
+
+    static async update(request: FastifyRequest<{Body: BodyWorkout, Params: ParamsId}>, reply: FastifyReply) {
+
+        const workoutId = request.params.id
+        const title = request.body.title
+
+        const editedWorkout = await prisma.workout.update({
+            where: {id: Number(workoutId)}, 
+            data: {title: title}
+        })
+
+        return reply.status(200).send(editedWorkout)
     }
 
     static async delete(request: FastifyRequest<{Params: ParamsId}>, reply: FastifyReply) {

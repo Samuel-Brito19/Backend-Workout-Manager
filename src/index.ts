@@ -62,6 +62,10 @@ fastify.post(
   {preHandler: [fastify.Authentication]},
   WorkoutController.store,
   )
+fastify.put('/users/workouts/:id',
+{preHandler: [fastify.Authentication]},
+WorkoutController.update
+)
 fastify.delete('/users/workouts/:id',
 {preHandler: [fastify.Authentication]},
 WorkoutController.delete)
@@ -71,7 +75,6 @@ WorkoutController.delete)
 fastify.get('/exercises/:workoutId', 
 {preHandler: [fastify.Authentication]},
 ExerciseController.index)
-
 fastify.post('/exercises', 
   {preHandler: [fastify.Authentication]},
   ExerciseController.store,
