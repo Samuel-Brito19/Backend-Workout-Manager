@@ -65,6 +65,16 @@ class ExerciseController {
         reply.status(200).send(updatedExercise)
     }
 
+    static async find(request: FastifyRequest<{Params: ParamsExercise}>, reply: FastifyReply) {
+        const {id} = request.params
+
+        const idNumber = Number(id)
+
+        const findExercise = await prisma.workout.findUnique({where: {id: idNumber}})
+
+        return reply.status(200).send(findExercise)
+    }
+
     static async delete(request: FastifyRequest<{Params: ParamsExercise}>, reply: FastifyReply) {
 
         const {id} = request.params
