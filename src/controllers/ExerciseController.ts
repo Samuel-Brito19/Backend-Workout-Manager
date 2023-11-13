@@ -52,18 +52,13 @@ class ExerciseController {
     static async update(request: FastifyRequest<{Params: ParamsExercise, Body: RequestExersice}>, reply: FastifyReply) {
 
         const id = request.params.id
-        const newName = request.body.name
-        const newSet = request.body.sets
-        const newRepetitions = request.body.repetitions
-        const newWorkoutId = request.body.workoutId
+
+        const body = request.body
 
         const updatedExercise = await prisma.exercise.update({
             where: {id: Number(id)},
             data: {
-                name: newName,
-                sets: newSet,
-                repetitions: newRepetitions,
-                workoutId: newWorkoutId
+                ...body
             }
         })
 

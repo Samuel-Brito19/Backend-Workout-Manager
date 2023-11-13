@@ -55,7 +55,7 @@ class WorkoutController {
 
         const editedWorkout = await prisma.workout.update({
             where: {id: Number(workoutId)}, 
-            data: {title: title}
+            data: {title}
         })
 
         return reply.status(200).send(editedWorkout)
